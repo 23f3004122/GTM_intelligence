@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GTM Intelligence Report — Thu Apr 30 2026</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0d1117;
+      color: #e6edf3;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
+      border-bottom: 1px solid #30363d;
+      padding: 32px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .header h1 { font-size: 24px; font-weight: 700; color: #e6edf3; }
+    .header .date { font-size: 13px; color: #8b949e; margin-top: 4px; }
+    .header .logo {
+      background: #1f6feb;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 20px;
+    }
+
+    /* ── Layout ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 32px 40px; }
+    .section { margin-bottom: 40px; }
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #e6edf3;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #21262d;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title .count {
+      background: #21262d;
+      color: #8b949e;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    /* ── Summary cards ── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .summary-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .summary-card .label { font-size: 12px; color: #8b949e; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .05em; }
+    .summary-card .value { font-size: 28px; font-weight: 700; color: #e6edf3; }
+    .summary-card .sub { font-size: 12px; color: #8b949e; margin-top: 4px; }
+
+    /* ── Red flag cards ── */
+    .card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 10px;
+    }
+    .card.high   { border-left: 4px solid #f85149; }
+    .card.medium { border-left: 4px solid #f0883e; }
+    .card.low    { border-left: 4px solid #3fb950; }
+
+    .badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .badge.high   { background: #3d1a1a; color: #f85149; }
+    .badge.medium { background: #3d2a1a; color: #f0883e; }
+    .badge.low    { background: #1a3d1a; color: #3fb950; }
+
+    .flag-type { font-size: 12px; color: #8b949e; text-transform: capitalize; }
+    .deal-name { font-size: 14px; font-weight: 600; color: #e6edf3; margin-bottom: 2px; }
+    .account   { font-size: 12px; color: #8b949e; margin-bottom: 6px; }
+    .explanation { font-size: 13px; color: #c9d1d9; }
+
+    /* ── Action cards ── */
+    .action-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .action-num {
+      width: 28px; height: 28px;
+      background: #1f6feb;
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; flex-shrink: 0;
+    }
+    .action-text { font-size: 13px; color: #c9d1d9; margin-top: 4px; }
+
+    /* ── Table ── */
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      text-align: left;
+      padding: 10px 14px;
+      background: #161b22;
+      color: #8b949e;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      border-bottom: 1px solid #30363d;
+    }
+    td {
+      padding: 10px 14px;
+      font-size: 13px;
+      border-bottom: 1px solid #21262d;
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #161b22; }
+
+    /* ── Stage breakdown ── */
+    .stage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+    .stage-row {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stage-name { font-size: 12px; color: #8b949e; }
+    .stage-count { font-size: 18px; font-weight: 700; color: #e6edf3; }
+    .stage-pill {
+      background: #21262d;
+      color: #8b949e;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    .empty { color: #8b949e; font-size: 13px; padding: 12px 0; }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      padding: 24px;
+      color: #8b949e;
+      font-size: 12px;
+      border-top: 1px solid #21262d;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <h1>🎯 GTM Intelligence Report</h1>
+      <div class="date">Generated on Thu Apr 30 2026 · CloudColon Technologies</div>
+    </div>
+    <div class="logo">Powered by AI</div>
+  </div>
+
+  <div class="container">
+
+    <!-- ── Summary ── -->
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="label">Total Pipeline</div>
+        <div class="value">$2.1M</div>
+        <div class="sub">All open opportunities</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">Weighted Forecast</div>
+        <div class="value">$1.2M</div>
+        <div class="sub">Probability-adjusted</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">Closing This Month</div>
+        <div class="value">0</div>
+        <div class="sub">Deals due within 30 days</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">Red Flags</div>
+        <div class="value" style="color:#f85149">27</div>
+        <div class="sub">Deals needing attention</div>
+      </div>
+    </div>
+
+    <!-- ── Stage Breakdown ── -->
+    
+    <div class="section">
+      <div class="section-title">📊 Pipeline by Stage</div>
+      <div class="stage-grid">
+        <div class="stage-row">
+          <span class="stage-name">Needs Analysis</span>
+          <span class="stage-count">1</span>
+        </div>
+        <div class="stage-row">
+          <span class="stage-name">Negotiation/Review</span>
+          <span class="stage-count">2</span>
+        </div>
+        <div class="stage-row">
+          <span class="stage-name">Proposal/Price Quote</span>
+          <span class="stage-count">2</span>
+        </div>
+        <div class="stage-row">
+          <span class="stage-name">Value Proposition</span>
+          <span class="stage-count">2</span>
+        </div>
+        <div class="stage-row">
+          <span class="stage-name">Perception Analysis</span>
+          <span class="stage-count">1</span>
+        </div>
+        <div class="stage-row">
+          <span class="stage-name">Prospecting</span>
+          <span class="stage-count">2</span>
+        </div>
+        <div class="stage-row">
+          <span class="stage-name">Id. Decision Makers</span>
+          <span class="stage-count">3</span>
+        </div>
+        <div class="stage-row">
+          <span class="stage-name">Qualification</span>
+          <span class="stage-count">1</span>
+        </div></div>
+    </div>
+
+    <!-- ── Top 5 Deals ── -->
+    
+    <div class="section">
+      <div class="section-title">💰 Top Deals</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Deal Name</th><th>Account</th><th>Amount</th><th>Stage</th>
+          </tr>
+        </thead>
+        <tbody>
+    <tr>
+      <td>United Oil Plant Standby Generators</td>
+      <td>United Oil & Gas Corp.</td>
+      <td style="color:#3fb950;font-weight:700">$675K</td>
+      <td><span class="stage-pill">Needs Analysis</span></td>
+    </tr>
+    <tr>
+      <td>United Oil Installations</td>
+      <td>United Oil & Gas Corp.</td>
+      <td style="color:#3fb950;font-weight:700">$270K</td>
+      <td><span class="stage-pill">Negotiation/Review</span></td>
+    </tr>
+    <tr>
+      <td>United Oil Refinery Generators</td>
+      <td>United Oil & Gas Corp.</td>
+      <td style="color:#3fb950;font-weight:700">$270K</td>
+      <td><span class="stage-pill">Proposal/Price Quote</span></td>
+    </tr>
+    <tr>
+      <td>United Oil Office Portable Generators</td>
+      <td>United Oil & Gas Corp.</td>
+      <td style="color:#3fb950;font-weight:700">$125K</td>
+      <td><span class="stage-pill">Negotiation/Review</span></td>
+    </tr>
+    <tr>
+      <td>Grand Hotels Guest Portable Generators</td>
+      <td>Grand Hotels & Resorts Ltd</td>
+      <td style="color:#3fb950;font-weight:700">$250K</td>
+      <td><span class="stage-pill">Value Proposition</span></td>
+    </tr></tbody>
+      </table>
+    </div>
+
+    <!-- ── Red Flags ── -->
+    <div class="section">
+      <div class="section-title">
+        🚨 Red Flags
+        <span class="count">27</span>
+      </div>
+      
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">stale</span>
+        </div>
+        <div class="deal-name">United Oil Plant Standby Generators</div>
+        <div class="account">United Oil & Gas Corp.</div>
+        <p class="explanation">No last activity date found for this deal.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">stale</span>
+        </div>
+        <div class="deal-name">United Oil Installations</div>
+        <div class="account">United Oil & Gas Corp.</div>
+        <p class="explanation">No last activity date found for this deal.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">stale</span>
+        </div>
+        <div class="deal-name">United Oil Refinery Generators</div>
+        <div class="account">United Oil & Gas Corp.</div>
+        <p class="explanation">No last activity date found for this deal.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">stale</span>
+        </div>
+        <div class="deal-name">Grand Hotels Guest Portable Generators</div>
+        <div class="account">Grand Hotels & Resorts Ltd</div>
+        <p class="explanation">No last activity date found for this deal.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">stale</span>
+        </div>
+        <div class="deal-name">United Oil Office Portable Generators</div>
+        <div class="account">United Oil & Gas Corp.</div>
+        <p class="explanation">No last activity date found for this deal.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">stale</span>
+        </div>
+        <div class="deal-name">Express Logistics SLA</div>
+        <div class="account">Express Logistics and Transport</div>
+        <p class="explanation">No last activity date found for this deal.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">stale</span>
+        </div>
+        <div class="deal-name">Pyramid Emergency Generators</div>
+        <div class="account">Pyramid Construction Inc.</div>
+        <p class="explanation">No last activity date found for this deal.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">stale</span>
+        </div>
+        <div class="deal-name">University of AZ Installations</div>
+        <div class="account">University of Arizona</div>
+        <p class="explanation">No last activity date found for this deal.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">stale</span>
+        </div>
+        <div class="deal-name">Express Logistics Portable Truck Generators</div>
+        <div class="account">Express Logistics and Transport</div>
+        <p class="explanation">No last activity date found for this deal.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">stale</span>
+        </div>
+        <div class="deal-name">GenePoint Lab Generators</div>
+        <div class="account">GenePoint</div>
+        <p class="explanation">No last activity date found for this deal.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">stale</span>
+        </div>
+        <div class="deal-name">Edge Emergency Generator</div>
+        <div class="account">Edge Communications</div>
+        <p class="explanation">No last activity date found for this deal.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">stale</span>
+        </div>
+        <div class="deal-name">Dickenson Mobile Generators</div>
+        <div class="account">Dickenson plc</div>
+        <p class="explanation">No last activity date found for this deal.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">stale</span>
+        </div>
+        <div class="deal-name">Grand Hotels Kitchen Generator</div>
+        <div class="account">Grand Hotels & Resorts Ltd</div>
+        <p class="explanation">No last activity date found for this deal.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">zero amount</span>
+        </div>
+        <div class="deal-name">radha@king-</div>
+        <div class="account">radha@king</div>
+        <p class="explanation">Deal amount is null.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">overdue</span>
+        </div>
+        <div class="deal-name">United Oil Plant Standby Generators</div>
+        <div class="account">United Oil & Gas Corp.</div>
+        <p class="explanation">Close date is in the past.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">overdue</span>
+        </div>
+        <div class="deal-name">United Oil Installations</div>
+        <div class="account">United Oil & Gas Corp.</div>
+        <p class="explanation">Close date is in the past.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">overdue</span>
+        </div>
+        <div class="deal-name">United Oil Refinery Generators</div>
+        <div class="account">United Oil & Gas Corp.</div>
+        <p class="explanation">Close date is in the past.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">overdue</span>
+        </div>
+        <div class="deal-name">Grand Hotels Guest Portable Generators</div>
+        <div class="account">Grand Hotels & Resorts Ltd</div>
+        <p class="explanation">Close date is in the past.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">overdue</span>
+        </div>
+        <div class="deal-name">United Oil Office Portable Generators</div>
+        <div class="account">United Oil & Gas Corp.</div>
+        <p class="explanation">Close date is in the past.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">overdue</span>
+        </div>
+        <div class="deal-name">Express Logistics SLA</div>
+        <div class="account">Express Logistics and Transport</div>
+        <p class="explanation">Close date is in the past.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">overdue</span>
+        </div>
+        <div class="deal-name">Pyramid Emergency Generators</div>
+        <div class="account">Pyramid Construction Inc.</div>
+        <p class="explanation">Close date is in the past.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">overdue</span>
+        </div>
+        <div class="deal-name">University of AZ Installations</div>
+        <div class="account">University of Arizona</div>
+        <p class="explanation">Close date is in the past.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">overdue</span>
+        </div>
+        <div class="deal-name">Express Logistics Portable Truck Generators</div>
+        <div class="account">Express Logistics and Transport</div>
+        <p class="explanation">Close date is in the past.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">overdue</span>
+        </div>
+        <div class="deal-name">GenePoint Lab Generators</div>
+        <div class="account">GenePoint</div>
+        <p class="explanation">Close date is in the past.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">overdue</span>
+        </div>
+        <div class="deal-name">Edge Emergency Generator</div>
+        <div class="account">Edge Communications</div>
+        <p class="explanation">Close date is in the past.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">overdue</span>
+        </div>
+        <div class="deal-name">Dickenson Mobile Generators</div>
+        <div class="account">Dickenson plc</div>
+        <p class="explanation">Close date is in the past.</p>
+      </div>
+      <div class="card high">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge high">HIGH</span>
+          <span class="flag-type">overdue</span>
+        </div>
+        <div class="deal-name">Grand Hotels Kitchen Generator</div>
+        <div class="account">Grand Hotels & Resorts Ltd</div>
+        <p class="explanation">Close date is in the past.</p>
+      </div>
+    </div>
+
+    <!-- ── Next Best Actions ── -->
+    <div class="section">
+      <div class="section-title">
+        ⚡ Next Best Actions
+        <span class="count">14</span>
+      </div>
+      
+      <div class="action-card">
+        <div class="action-num">1</div>
+        <div>
+          <div class="deal-name">United Oil Plant Standby Generators</div>
+          <div class="action-text">Update close date to a future date.</div>
+        </div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">2</div>
+        <div>
+          <div class="deal-name">United Oil Installations</div>
+          <div class="action-text">Update close date to a future date.</div>
+        </div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">3</div>
+        <div>
+          <div class="deal-name">United Oil Refinery Generators</div>
+          <div class="action-text">Update close date to a future date.</div>
+        </div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">4</div>
+        <div>
+          <div class="deal-name">Grand Hotels Guest Portable Generators</div>
+          <div class="action-text">Update close date to a future date.</div>
+        </div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">5</div>
+        <div>
+          <div class="deal-name">United Oil Office Portable Generators</div>
+          <div class="action-text">Update close date to a future date.</div>
+        </div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">6</div>
+        <div>
+          <div class="deal-name">Express Logistics SLA</div>
+          <div class="action-text">Update close date to a future date.</div>
+        </div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">7</div>
+        <div>
+          <div class="deal-name">Pyramid Emergency Generators</div>
+          <div class="action-text">Update close date to a future date.</div>
+        </div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">8</div>
+        <div>
+          <div class="deal-name">University of AZ Installations</div>
+          <div class="action-text">Update close date to a future date.</div>
+        </div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">9</div>
+        <div>
+          <div class="deal-name">Express Logistics Portable Truck Generators</div>
+          <div class="action-text">Update close date to a future date.</div>
+        </div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">10</div>
+        <div>
+          <div class="deal-name">GenePoint Lab Generators</div>
+          <div class="action-text">Update close date to a future date.</div>
+        </div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">11</div>
+        <div>
+          <div class="deal-name">Edge Emergency Generator</div>
+          <div class="action-text">Update close date to a future date.</div>
+        </div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">12</div>
+        <div>
+          <div class="deal-name">Dickenson Mobile Generators</div>
+          <div class="action-text">Update close date to a future date.</div>
+        </div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">13</div>
+        <div>
+          <div class="deal-name">Grand Hotels Kitchen Generator</div>
+          <div class="action-text">Update close date to a future date.</div>
+        </div>
+      </div>
+      <div class="action-card">
+        <div class="action-num">14</div>
+        <div>
+          <div class="deal-name">radha@king-</div>
+          <div class="action-text">Update deal amount to a valid value.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Data Quality ── -->
+    <div class="section">
+      <div class="section-title">
+        📋 Data Quality
+        <span class="count">14</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Deal Name</th><th>Quality Score</th><th>Missing Fields</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>United Oil Plant Standby Generators</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;background:#30363d;border-radius:4px;height:8px">
+                <div style="width:80%;background:#3fb950;height:8px;border-radius:4px"></div>
+              </div>
+              <span style="color:#3fb950;font-weight:700;min-width:36px">80%</span>
+            </div>
+          </td>
+          <td style="color:#8b949e">LastActivityDate, NextStep</td>
+        </tr>
+        <tr>
+          <td>United Oil Installations</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;background:#30363d;border-radius:4px;height:8px">
+                <div style="width:80%;background:#3fb950;height:8px;border-radius:4px"></div>
+              </div>
+              <span style="color:#3fb950;font-weight:700;min-width:36px">80%</span>
+            </div>
+          </td>
+          <td style="color:#8b949e">LastActivityDate, NextStep</td>
+        </tr>
+        <tr>
+          <td>United Oil Refinery Generators</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;background:#30363d;border-radius:4px;height:8px">
+                <div style="width:80%;background:#3fb950;height:8px;border-radius:4px"></div>
+              </div>
+              <span style="color:#3fb950;font-weight:700;min-width:36px">80%</span>
+            </div>
+          </td>
+          <td style="color:#8b949e">LastActivityDate, NextStep</td>
+        </tr>
+        <tr>
+          <td>Grand Hotels Guest Portable Generators</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;background:#30363d;border-radius:4px;height:8px">
+                <div style="width:80%;background:#3fb950;height:8px;border-radius:4px"></div>
+              </div>
+              <span style="color:#3fb950;font-weight:700;min-width:36px">80%</span>
+            </div>
+          </td>
+          <td style="color:#8b949e">LastActivityDate, NextStep</td>
+        </tr>
+        <tr>
+          <td>United Oil Office Portable Generators</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;background:#30363d;border-radius:4px;height:8px">
+                <div style="width:80%;background:#3fb950;height:8px;border-radius:4px"></div>
+              </div>
+              <span style="color:#3fb950;font-weight:700;min-width:36px">80%</span>
+            </div>
+          </td>
+          <td style="color:#8b949e">LastActivityDate, NextStep</td>
+        </tr>
+        <tr>
+          <td>Express Logistics SLA</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;background:#30363d;border-radius:4px;height:8px">
+                <div style="width:80%;background:#3fb950;height:8px;border-radius:4px"></div>
+              </div>
+              <span style="color:#3fb950;font-weight:700;min-width:36px">80%</span>
+            </div>
+          </td>
+          <td style="color:#8b949e">LastActivityDate, NextStep</td>
+        </tr>
+        <tr>
+          <td>Pyramid Emergency Generators</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;background:#30363d;border-radius:4px;height:8px">
+                <div style="width:80%;background:#3fb950;height:8px;border-radius:4px"></div>
+              </div>
+              <span style="color:#3fb950;font-weight:700;min-width:36px">80%</span>
+            </div>
+          </td>
+          <td style="color:#8b949e">LastActivityDate, NextStep</td>
+        </tr>
+        <tr>
+          <td>University of AZ Installations</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;background:#30363d;border-radius:4px;height:8px">
+                <div style="width:80%;background:#3fb950;height:8px;border-radius:4px"></div>
+              </div>
+              <span style="color:#3fb950;font-weight:700;min-width:36px">80%</span>
+            </div>
+          </td>
+          <td style="color:#8b949e">LastActivityDate, NextStep</td>
+        </tr>
+        <tr>
+          <td>Express Logistics Portable Truck Generators</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;background:#30363d;border-radius:4px;height:8px">
+                <div style="width:80%;background:#3fb950;height:8px;border-radius:4px"></div>
+              </div>
+              <span style="color:#3fb950;font-weight:700;min-width:36px">80%</span>
+            </div>
+          </td>
+          <td style="color:#8b949e">LastActivityDate, NextStep</td>
+        </tr>
+        <tr>
+          <td>GenePoint Lab Generators</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;background:#30363d;border-radius:4px;height:8px">
+                <div style="width:80%;background:#3fb950;height:8px;border-radius:4px"></div>
+              </div>
+              <span style="color:#3fb950;font-weight:700;min-width:36px">80%</span>
+            </div>
+          </td>
+          <td style="color:#8b949e">LastActivityDate, NextStep</td>
+        </tr>
+        <tr>
+          <td>Edge Emergency Generator</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;background:#30363d;border-radius:4px;height:8px">
+                <div style="width:80%;background:#3fb950;height:8px;border-radius:4px"></div>
+              </div>
+              <span style="color:#3fb950;font-weight:700;min-width:36px">80%</span>
+            </div>
+          </td>
+          <td style="color:#8b949e">LastActivityDate, NextStep</td>
+        </tr>
+        <tr>
+          <td>Dickenson Mobile Generators</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;background:#30363d;border-radius:4px;height:8px">
+                <div style="width:80%;background:#3fb950;height:8px;border-radius:4px"></div>
+              </div>
+              <span style="color:#3fb950;font-weight:700;min-width:36px">80%</span>
+            </div>
+          </td>
+          <td style="color:#8b949e">LastActivityDate, NextStep</td>
+        </tr>
+        <tr>
+          <td>Grand Hotels Kitchen Generator</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;background:#30363d;border-radius:4px;height:8px">
+                <div style="width:80%;background:#3fb950;height:8px;border-radius:4px"></div>
+              </div>
+              <span style="color:#3fb950;font-weight:700;min-width:36px">80%</span>
+            </div>
+          </td>
+          <td style="color:#8b949e">LastActivityDate, NextStep</td>
+        </tr>
+        <tr>
+          <td>radha@king-</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;background:#30363d;border-radius:4px;height:8px">
+                <div style="width:60%;background:#f0883e;height:8px;border-radius:4px"></div>
+              </div>
+              <span style="color:#f0883e;font-weight:700;min-width:36px">60%</span>
+            </div>
+          </td>
+          <td style="color:#8b949e">Amount, LastActivityDate, NextStep</td>
+        </tr></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    GTM Intelligence · Generated Thu Apr 30 2026 · CloudColon Technologies
+  </div>
+
+</body>
+</html>
