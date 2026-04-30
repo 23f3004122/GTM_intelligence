@@ -1,4 +1,3 @@
-cat > .github/workflows/gtm.yml << 'EOF'
 name: GTM Deal Intelligence
 
 on:
@@ -65,4 +64,3 @@ jobs:
         with:
           name: gtm-report-${{ github.run_id }}
           path: output/report.html
-EOF
