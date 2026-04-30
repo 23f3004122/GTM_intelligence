@@ -1,0 +1,44 @@
+name: GTM Deal Intelligence
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Fetch Salesforce Deals
+        env:
+          SF_CLIENT_ID: ${{ secrets.SF_CLIENT_ID }}
+          SF_CLIENT_SECRET: ${{ secrets.SF_CLIENT_SECRET }}
+          SF_LOGIN_URL: ${{ secrets.SF_LOGIN_URL }}
+        run: node fetch-sf-deals.js
+
+      - name: Analyse Deals
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: node analyse-deals.js
+
+      - name: Generate Report
+        run: node generate-report.js
+
+      - name: Notify Slack
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+        run: node notify-slack.js
+
+      - name: Upload Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: gtm-report-${{ github.run_id }}
+          path: output/report.html
