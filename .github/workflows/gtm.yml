@@ -1,11 +1,20 @@
+cat > .github/workflows/gtm.yml << 'EOF'
 name: GTM Deal Intelligence
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '30 1 * * 1'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -31,14 +40,29 @@ jobs:
       - name: Generate Report
         run: node generate-report.js
 
-      - name: Notify Slack
+      - name: Copy report to docs folder
+        run: |
+          mkdir -p docs
+          cp output/report.html docs/index.html
+
+      - name: Commit and push docs/index.html
+        run: |
+          git config user.name "GTM Bot"
+          git config user.email "gtm-bot@cloudcolon.com"
+          git add docs/index.html
+          git diff --staged --quiet || git commit -m "Update GTM report $(date +'%Y-%m-%d')"
+          git push
+
+      - name: Notify Slack with URL
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+          REPORT_URL: https://23f3004122.github.io/GTM_intelligence/
         run: node notify-slack.js
 
-      - name: Upload Report
+      - name: Upload Report as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: gtm-report-${{ github.run_id }}
           path: output/report.html
+EOF
